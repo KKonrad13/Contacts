@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/main_background">
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCancelInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="@drawable/button"
+        android:textColor="@color/off_white"
+        android:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnEdit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="@drawable/button"
+        android:textColor="@color/off_white"
+        android:text="@string/edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="237dp"
+        android:layout_height="230dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCancelInfo"
+        android:src="@drawable/default_photo"
+        android:contentDescription="@string/contact_photo"/>
+
+    <TextView
+        android:id="@+id/tvFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/text_border"
+        style="@style/ContactTextStyle"
+        android:hint="@string/first_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivAvatar" />
+
+    <TextView
+        android:id="@+id/tvLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ContactTextStyle"
+        android:hint="@string/last_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvFirstName" />
+
+    <TextView
+        android:id="@+id/tvNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ContactTextStyle"
+        android:hint="@string/number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLastName" />
+
+    <TextView
+        android:id="@+id/tvNotesTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ContactTextStyle"
+        android:textSize="20sp"
+        android:text="@string/notes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNumber" />
+
+    <TextView
+        android:id="@+id/tvNotes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        style="@style/ContactTextStyle"
+        android:gravity="start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNotesTag" />
+</androidx.constraintlayout.widget.ConstraintLayout>
