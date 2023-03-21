@@ -10,7 +10,9 @@
         android:label="AddContactFragment" >
         <action
             android:id="@+id/action_addContactFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/contactInfoFragment"
@@ -18,7 +20,9 @@
         android:label="ContactInfoFragment" >
         <action
             android:id="@+id/action_contactInfoFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/editContactFragment"
@@ -26,7 +30,9 @@
         android:label="EditContactFragment" >
         <action
             android:id="@+id/action_editContactFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"

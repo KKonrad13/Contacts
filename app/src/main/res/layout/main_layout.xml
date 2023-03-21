@@ -45,6 +45,7 @@
                 android:layout_height="50dp"
                 android:padding="10dp"
                 android:src="@drawable/plus_icon"
+                android:onClick="@{() -> mainFragment.goToAddContact()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/searchView"
