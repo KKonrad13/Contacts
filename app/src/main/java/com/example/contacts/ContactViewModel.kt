@@ -21,6 +21,14 @@ class ContactViewModel:  ViewModel() {
     private val compLastName: CompLastName = CompLastName()
     private val compPhoneNumber: CompPhoneNumber = CompPhoneNumber()
 
+    fun setContacts(contacts: MutableList<Contact>){
+        _contacts.value = contacts
+    }
+
+    fun setCurrentContact(contact: Contact?){
+        _currentContact.value = contact
+    }
+
     fun addContact(contact: Contact){
         _contacts.value?.add(contact)
         sortContacts("Default")

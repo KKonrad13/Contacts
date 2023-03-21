@@ -1,13 +1,12 @@
 package com.example.contacts
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contacts.databinding.SingleContactBinding
 
-class ContactsAdapter(private val activity: Activity, private var contacts: MutableList<Contact>): RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
+class ContactsAdapter(private val viewModel: ContactViewModel, private var contacts: MutableList<Contact>): RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
     inner class ContactViewHolder(binding: SingleContactBinding) : RecyclerView.ViewHolder(binding.root){
         val tvContactName = binding.tvContactName
     }
@@ -33,6 +32,7 @@ class ContactsAdapter(private val activity: Activity, private var contacts: Muta
             tvContactName.text = firstName.plus(contact.lastName)
 
             itemView.setOnClickListener {
+                viewModel.setCurrentContact(contact)
                 itemView.findNavController().navigate(R.id.action_mainFragment_to_contactInfoFragment)
             }
         }

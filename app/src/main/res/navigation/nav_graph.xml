@@ -23,6 +23,9 @@
             app:destination="@id/mainFragment"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_contactInfoFragment_to_editContactFragment"
+            app:destination="@id/editContactFragment" />
     </fragment>
     <fragment
         android:id="@+id/editContactFragment"
