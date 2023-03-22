@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -57,17 +58,29 @@ class AddContactFragment: Fragment(R.layout.add_edit_contact) {
 
         btnConfirm.setOnClickListener {
             addContact()
-            goToMainFragment()
         }
     }
 
     private fun addContact(){
-        sharedViewModel.addContact(
-            Contact(-1,
-            etFirstName.text.toString(),
-            etLastName.text.toString(),
-            etNumber.text.toString(),
-            etNotes.text.toString()))
+        if((etFirstName.text.toString() != "" && etLastName.text.toString() != "" ) ||
+            etNumber.text.toString() != "") {
+            sharedViewModel.setCurrentContact(
+                Contact(
+                    -1,
+                    etFirstName.text.toString(),
+                    etLastName.text.toString(),
+                    etNumber.text.toString(),
+                    etNotes.text.toString()
+                )
+            )
+
+            goToMainFragment()
+        }else{
+            Toast.makeText(this.requireContext(),
+                "Contact must have name and phone number",
+                Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     private fun goToMainFragment(){

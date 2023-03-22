@@ -11,11 +11,6 @@ class ContactsAdapter(private val viewModel: ContactViewModel, private var conta
         val tvContactName = binding.tvContactName
     }
 
-    fun setList(filteredContacts: MutableList<Contact>){
-        contacts = filteredContacts
-        notifyDataSetChanged()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val contactBinding = SingleContactBinding.inflate(inflater, parent, false)
@@ -40,5 +35,14 @@ class ContactsAdapter(private val viewModel: ContactViewModel, private var conta
 
     override fun getItemCount(): Int {
         return contacts.size
+    }
+
+    fun updateList(){
+        notifyDataSetChanged()
+    }
+
+    fun setList(filteredContacts: MutableList<Contact>){
+        contacts = filteredContacts
+        updateList()
     }
 }

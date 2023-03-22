@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.contacts.Contact
 import com.example.contacts.ContactViewModel
 import com.example.contacts.R
 import com.example.contacts.databinding.AddEditContactBinding
@@ -55,12 +57,32 @@ class EditContactFragment: Fragment(R.layout.add_edit_contact) {
 
         btnConfirm.setOnClickListener {
             confirmEdit()
-            goToMainFragment()
         }
     }
 
     private fun confirmEdit(){
+        if((etFirstName.text.toString() != "" && etLastName.text.toString() != "" ) ||
+            etNumber.text.toString() != "") {
+            sharedViewModel.apply {
 
+                setCurrentContact(
+                    Contact(
+                        currentContact.value!!.index,
+                        etFirstName.text.toString(),
+                        etLastName.text.toString(),
+                        etNumber.text.toString(),
+                        etNotes.text.toString()
+                    )
+                )
+            }
+
+            goToMainFragment()
+        }else{
+            Toast.makeText(this.requireContext(),
+                "Contact must have name and phone number",
+                Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     private fun goToMainFragment(){

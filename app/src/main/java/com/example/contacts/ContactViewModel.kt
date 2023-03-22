@@ -1,5 +1,6 @@
 package com.example.contacts
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,13 +14,17 @@ class ContactViewModel:  ViewModel() {
     val contacts: LiveData<MutableList<Contact>> = _contacts
 
     init{
-        _currentContact.value = Contact()
+        _currentContact.value = null
         _contacts.value = mutableListOf()
     }
 
     private val compFirstName: CompFirstName = CompFirstName()
     private val compLastName: CompLastName = CompLastName()
     private val compPhoneNumber: CompPhoneNumber = CompPhoneNumber()
+
+    fun resetCurrentContact(){
+        _currentContact.value = null
+    }
 
     fun setContacts(contacts: MutableList<Contact>){
         _contacts.value = contacts
@@ -29,8 +34,14 @@ class ContactViewModel:  ViewModel() {
         _currentContact.value = contact
     }
 
+    fun setContactOnIndex(contact: Contact?){
+        _contacts.value!![contact!!.index] = contact
+        sortContacts("Default")
+    }
+
     fun addContact(contact: Contact){
         _contacts.value?.add(contact)
+        Log.d("XDXDXD", _contacts.value?.size.toString().plus("a"))
         sortContacts("Default")
     }
 

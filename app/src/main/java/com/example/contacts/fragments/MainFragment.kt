@@ -34,7 +34,7 @@ class MainFragment: Fragment(R.layout.main_layout) {
     private val binding get() = _binding!!
 
     private val sharedViewModel: ContactViewModel by activityViewModels()
-    private val sharedPrefFile = "y"
+    private val sharedPrefFile = "we"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,32 +52,16 @@ class MainFragment: Fragment(R.layout.main_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.mainFragment = this
-
+        recyclerView = binding.recyclerView
+        searchView = binding.searchView
         npChooseSort = binding.npChooseSort
 
-        npChooseSort.minValue = 0
-        npChooseSort.maxValue = displayedValues.size - 1
-        npChooseSort.displayedValues = displayedValues
-        npChooseSort.value = 0
+        handleSharedPreferences()
 
-        val sharedPreferences = requireContext().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
-        val contactJson = sharedPreferences.getString("key", null)
-
-        if(contactJson != null){
-            val contactType = object : TypeToken<MutableList<Contact>>() {}.type
-            sharedViewModel.setContacts(Gson().fromJson(contactJson, contactType))
-        }else{
-            sharedViewModel.setContacts(mutableListOf())
-            addBasicContacts()//for testing
-        }
-
-        recyclerView = view.findViewById(R.id.recyclerView)
-        contactsAdapter = ContactsAdapter(sharedViewModel, sharedViewModel.contacts.value!!)
-
-        layoutManager = LinearLayoutManager(activity)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = contactsAdapter
+        setupRecyclerView()
+        setupNumberPicker()
+        handleNumberPicker()
+        searchInList()
     }
 
     override fun onStop() {
@@ -87,6 +71,72 @@ class MainFragment: Fragment(R.layout.main_layout) {
         val contactJson = Gson().toJson(sharedViewModel.contacts.value!!)
         editor.putString("key", contactJson)
         editor.apply()
+    }
+
+    private fun handleSharedPreferences(){
+        val sharedPreferences = requireContext().getSharedPreferences(sharedPrefFile, Context.MODE_PRIVATE)
+        val contactJson = sharedPreferences.getString("key", null)
+
+        if(contactJson != null){
+            val contactType = object : TypeToken<MutableList<Contact>>() {}.type
+            sharedViewModel.apply {
+                setContacts(Gson().fromJson(contactJson, contactType))
+
+                if(currentContact.value != null){
+                    if(currentContact.value!!.index == -1){
+                        addContact(currentContact.value!!)
+                    }else{
+                        setContactOnIndex(currentContact.value!!)
+                    }
+                    resetCurrentContact()
+                }
+            }
+        }else{
+            sharedViewModel.setContacts(mutableListOf())
+            addBasicContacts()//for testing
+        }
+    }
+
+    private fun setupNumberPicker(){
+        npChooseSort.minValue = 0
+        npChooseSort.maxValue = displayedValues.size - 1
+        npChooseSort.displayedValues = displayedValues
+        npChooseSort.value = 0
+
+    }
+
+    private fun handleNumberPicker(){
+        npChooseSort.setOnValueChangedListener { _, oldVal, newVal ->
+            if(oldVal != newVal){
+                sharedViewModel.sortContacts(displayedValues[newVal])
+                contactsAdapter.updateList()
+            }
+        }
+    }
+
+    private fun setupRecyclerView(){
+
+        contactsAdapter = ContactsAdapter(sharedViewModel, sharedViewModel.contacts.value!!)
+
+        layoutManager = LinearLayoutManager(activity)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = contactsAdapter
+    }
+
+    private fun searchInList(){
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText == null) return false
+                filterList(newText)
+                return true
+            }
+
+        })
     }
 
     fun filterList(text: String){
