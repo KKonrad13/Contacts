@@ -1,12 +1,20 @@
 package com.example.contacts.fragments
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -14,6 +22,8 @@ import com.example.contacts.Contact
 import com.example.contacts.ContactViewModel
 import com.example.contacts.R
 import com.example.contacts.databinding.AddEditContactBinding
+import java.io.File
+import java.io.FileOutputStream
 
 class EditContactFragment: Fragment(R.layout.add_edit_contact) {
     private var _binding: AddEditContactBinding? = null
@@ -26,8 +36,19 @@ class EditContactFragment: Fragment(R.layout.add_edit_contact) {
     private lateinit var etLastName: EditText
     private lateinit var etNumber: EditText
     private lateinit var etNotes: EditText
-
+    private lateinit var ivAvatar: ImageView
     private val sharedViewModel: ContactViewModel by activityViewModels()
+
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data
+            val uri: Uri? = data!!.data
+            val imageView: ImageView = ivAvatar
+            imageView.setImageURI(uri)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,11 +71,39 @@ class EditContactFragment: Fragment(R.layout.add_edit_contact) {
         etLastName = binding.etLastName
         etNumber = binding.etNumber
         etNotes = binding.etNotes
+        ivAvatar = binding.ivAvatar
 
+
+        handleConfirmButton()
+        handleCancelButton()
+        handleIvAvatar()
+    }
+
+    private fun handleIvAvatar() {
+        if(sharedViewModel.currentContact.value?.imageName != ""){
+            val file = sharedViewModel.currentContact.value?.imageName?.let {
+                File(requireActivity().filesDir, it)
+            }
+            val inputStream = requireActivity().openFileInput(file?.name)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            ivAvatar.setImageBitmap(bitmap)
+        }
+
+        ivAvatar.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            activityResultLauncher.launch(intent)
+        }
+    }
+
+    private fun handleCancelButton() {
         btnCancel.setOnClickListener {
             goToMainFragment()
         }
+    }
 
+    private fun handleConfirmButton() {
         btnConfirm.setOnClickListener {
             confirmEdit()
         }
@@ -63,6 +112,16 @@ class EditContactFragment: Fragment(R.layout.add_edit_contact) {
     private fun confirmEdit(){
         if((etFirstName.text.toString() != "" && etLastName.text.toString() != "" ) ||
             etNumber.text.toString() != "") {
+            val drawable = ivAvatar.drawable as BitmapDrawable
+            val bitmap = drawable.bitmap
+            val file = File(requireActivity().filesDir,etFirstName.text.toString()
+                .plus(etNumber.text.toString())
+                .plus(".png"))
+
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+
             sharedViewModel.apply {
 
                 setCurrentContact(
@@ -71,7 +130,10 @@ class EditContactFragment: Fragment(R.layout.add_edit_contact) {
                         etFirstName.text.toString(),
                         etLastName.text.toString(),
                         etNumber.text.toString(),
-                        etNotes.text.toString()
+                        etNotes.text.toString(),
+                        etFirstName.text.toString()
+                            .plus(etNumber.text.toString())
+                            .plus(".png")
                     )
                 )
             }

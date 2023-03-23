@@ -34,7 +34,7 @@ class MainFragment: Fragment(R.layout.main_layout) {
     private val binding get() = _binding!!
 
     private val sharedViewModel: ContactViewModel by activityViewModels()
-    private val sharedPrefFile = "we"
+    private val sharedPrefFile = "contacts"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
