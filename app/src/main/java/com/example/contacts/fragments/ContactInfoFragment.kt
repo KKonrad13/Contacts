@@ -39,13 +39,13 @@ class ContactInfoFragment: Fragment(R.layout.contact_info) {
             infoFragment = this@ContactInfoFragment
         }
 
-        if(sharedViewModel.currentContact.value?.imageName != ""){
-            val file = sharedViewModel.currentContact.value?.imageName?.let {
-                File(requireActivity().filesDir, it)
+        sharedViewModel.currentContact.value?.imageName?.let { imageName ->
+            if (imageName.isNotBlank()) {
+                val file = File(requireActivity().filesDir, imageName)
+                val inputStream = requireActivity().openFileInput(file.name)
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                ivAvatar.setImageBitmap(bitmap)
             }
-            val inputStream = requireActivity().openFileInput(file?.name)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            ivAvatar.setImageBitmap(bitmap)
         }
     }
 

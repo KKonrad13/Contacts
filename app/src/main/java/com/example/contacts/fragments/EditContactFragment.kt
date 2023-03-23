@@ -80,13 +80,13 @@ class EditContactFragment: Fragment(R.layout.add_edit_contact) {
     }
 
     private fun handleIvAvatar() {
-        if(sharedViewModel.currentContact.value?.imageName != ""){
-            val file = sharedViewModel.currentContact.value?.imageName?.let {
-                File(requireActivity().filesDir, it)
+        sharedViewModel.currentContact.value?.imageName?.let { imageName ->
+            if (imageName.isNotBlank()) {
+                val file = File(requireActivity().filesDir, imageName)
+                val inputStream = requireActivity().openFileInput(file.name)
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                ivAvatar.setImageBitmap(bitmap)
             }
-            val inputStream = requireActivity().openFileInput(file?.name)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            ivAvatar.setImageBitmap(bitmap)
         }
 
         ivAvatar.setOnClickListener {
