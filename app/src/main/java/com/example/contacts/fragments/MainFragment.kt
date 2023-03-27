@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.NumberPicker
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -27,6 +28,8 @@ class MainFragment: Fragment(R.layout.main_layout) {
     private lateinit var contactsAdapter: ContactsAdapter
     private lateinit var searchView: SearchView
     private lateinit var npChooseSort: NumberPicker
+    private lateinit var btnChangeDelBtnVisibility: Button
+    private lateinit var btnDeleteSelected: Button
     private val displayedValues = arrayOf("Default", "First Name", "Last Name", "Phone Number")
 
     private var _binding: MainLayoutBinding? = null
@@ -44,18 +47,14 @@ class MainFragment: Fragment(R.layout.main_layout) {
 
         return binding.root
     }
-
-    fun goToAddContact(){
-        findNavController().navigate(R.id.action_mainFragment_to_addContactFragment)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.mainFragment = this
         recyclerView = binding.recyclerView
         searchView = binding.searchView
         npChooseSort = binding.npChooseSort
-
+        btnChangeDelBtnVisibility = binding.btnChangeDelBtnVisibility
+        btnDeleteSelected = binding.btnDeleteSelected
         handleSharedPreferences()
 
         setupRecyclerView()
@@ -71,6 +70,25 @@ class MainFragment: Fragment(R.layout.main_layout) {
         val contactJson = Gson().toJson(sharedViewModel.contacts.value!!)
         editor.putString("key", contactJson)
         editor.apply()
+    }
+
+    fun goToAddContact(){
+        findNavController().navigate(R.id.action_mainFragment_to_addContactFragment)
+    }
+
+    fun changeDeleteButtonVisibility(){
+        if(btnDeleteSelected.visibility == View.GONE){
+            btnChangeDelBtnVisibility.text = getString(R.string.cancel)
+            btnDeleteSelected.visibility = View.VISIBLE
+        }else{
+            btnChangeDelBtnVisibility.text = getString(R.string.edit)
+            btnDeleteSelected.visibility = View.GONE
+        }
+        contactsAdapter.changeCheckBoxVisibility()
+    }
+
+    fun deleteSelected(){
+        contactsAdapter.deleteSelected()
     }
 
     private fun handleSharedPreferences(){

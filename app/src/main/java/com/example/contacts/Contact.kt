@@ -6,5 +6,6 @@ data class Contact(
     var lastName: String = "",
     var phoneNumber: String = "",
     var notes: String = "",
-    var imageName: String = ""
+    var imageName: String = "",
+    var isChecked: Boolean = false
 )

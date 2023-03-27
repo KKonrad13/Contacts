@@ -11,4 +11,6 @@
     <string name="contact_photo">ContactPhoto</string>
     <string name="edit">Edit</string>
     <string name="sort_by">Sort by:</string>
+    <string name="edit_contacts">Edit Contacts</string>
+    <string name="delete_selected">Delete Selected</string>
 </resources>
